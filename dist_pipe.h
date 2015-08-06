@@ -19,6 +19,7 @@ enum STATUS {
 	EMPTY = 1,
 	FULL = 2,
 	END = 3,
+	FINISHING = 4,
 };
 typedef enum STATUS STATUS;
 

@@ -14,10 +14,14 @@ int write_pos = 0;
 
 int end = 0;
 
-int *
-pipe_put_101_svc(msg arg1,  struct svc_req *rqstp)
-{
+int * pipe_put_101_svc(msg arg1,  struct svc_req *rqstp) {
 	static int  result;
+
+	if (end) {
+		result = FINISHING;
+		return &result;
+	}
+
 	if (buffer[write_pos] == NULL) {
 		end = (arg1.status == END) ? 1 : 0;
 
@@ -37,9 +41,7 @@ pipe_put_101_svc(msg arg1,  struct svc_req *rqstp)
 	return &result;
 }
 
-msg *
-pipe_get_101_svc(struct svc_req *rqstp)
-{
+msg * pipe_get_101_svc(struct svc_req *rqstp) {
 	static msg result;
 	
 	if (buffer[read_pos] == NULL) {

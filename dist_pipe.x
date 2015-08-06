@@ -2,7 +2,8 @@ enum STATUS {
 	OK = 0,
 	EMPTY = 1,
 	FULL = 2,
-	END = 3
+	END = 3,
+	FINISHING = 4
 };
 
 typedef string payload<>;
