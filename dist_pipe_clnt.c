@@ -10,13 +10,13 @@
 static struct timeval TIMEOUT = { 25, 0 };
 
 int *
-pipe_put_101(message_v arg1,  CLIENT *clnt)
+pipe_put_101(msg arg1,  CLIENT *clnt)
 {
 	static int clnt_res;
 
 	memset((char *)&clnt_res, 0, sizeof(clnt_res));
 	if (clnt_call (clnt, pipe_put,
-		(xdrproc_t) xdr_message_v, (caddr_t) &arg1,
+		(xdrproc_t) xdr_msg, (caddr_t) &arg1,
 		(xdrproc_t) xdr_int, (caddr_t) &clnt_res,
 		TIMEOUT) != RPC_SUCCESS) {
 		return (NULL);
@@ -24,14 +24,14 @@ pipe_put_101(message_v arg1,  CLIENT *clnt)
 	return (&clnt_res);
 }
 
-message_v *
+msg *
 pipe_get_101(CLIENT *clnt)
 {
-	static message_v clnt_res;
+	static msg clnt_res;
 
 	memset((char *)&clnt_res, 0, sizeof(clnt_res));
 	 if (clnt_call (clnt, pipe_get, (xdrproc_t) xdr_void, (caddr_t) NULL,
-		(xdrproc_t) xdr_message_v, (caddr_t) &clnt_res,
+		(xdrproc_t) xdr_msg, (caddr_t) &clnt_res,
 		TIMEOUT) != RPC_SUCCESS) {
 		return (NULL);
 	}

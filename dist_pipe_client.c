@@ -12,28 +12,21 @@ dist_pipe_101(char *host)
 {
 	CLIENT *clnt;
 	int  *result_1;
-	message_v pipe_put_101_arg1 = "arg";
-	message_v  *result_2;
+	msg pipe_put_101_arg1;
+	msg  *result_2;
+
+	pipe_put_101_arg1.data = "sfdjklf";
+	pipe_put_101_arg1.status = OK;
+
 
 #ifndef	DEBUG
-	clnt = clnt_create (host, DIST_PIPE, alfa, "udp");
+	clnt = clnt_create (host, DIST_PIPE, beta, "udp");
 	if (clnt == NULL) {
 		clnt_pcreateerror (host);
 		exit (1);
 	}
 #endif	/* DEBUG */
 
-	// result_1 = pipe_put_101(pipe_put_101_arg1, clnt);
-	// if (result_1 == (int *) NULL) {
-	// 	clnt_perror (clnt, "call failed");
-	// }
-	// result_2 = pipe_get_101(clnt);
-	// if (result_2 == (message_v *) NULL) {
-	// 	clnt_perror (clnt, "call failed");
-	// } else {
-	// 	printf("%s\n", *result_2);
-	// }
-
 	result_1 = pipe_put_101(pipe_put_101_arg1, clnt);
 	printf("%d\n", *result_1);
 
@@ -47,15 +40,14 @@ dist_pipe_101(char *host)
 	printf("%d\n", *result_1);
 
 	result_2 = pipe_get_101(clnt);
-	printf("%s\n", *result_2);
+	printf("%s\n", result_2->data);
 
 	result_2 = pipe_get_101(clnt);
-	printf("%s\n", *result_2);
+	printf("%s\n", result_2->data);
 	result_2 = pipe_get_101(clnt);
-	printf("%s\n", *result_2);
+	printf("%s\n", result_2->data);
 	result_2 = pipe_get_101(clnt);
-	printf("%s\n", *result_2);
-
+	printf("%s\n", result_2->data);
 #ifndef	DEBUG
 	clnt_destroy (clnt);
 #endif	 /* DEBUG */

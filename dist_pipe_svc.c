@@ -17,12 +17,12 @@
 #endif
 
 static int *
-_pipe_put_101 (message_v  *argp, struct svc_req *rqstp)
+_pipe_put_101 (msg  *argp, struct svc_req *rqstp)
 {
 	return (pipe_put_101_svc(*argp, rqstp));
 }
 
-static message_v *
+static msg *
 _pipe_get_101 (void  *argp, struct svc_req *rqstp)
 {
 	return (pipe_get_101_svc(rqstp));
@@ -32,7 +32,7 @@ static void
 dist_pipe_101(struct svc_req *rqstp, register SVCXPRT *transp)
 {
 	union {
-		message_v pipe_put_101_arg;
+		msg pipe_put_101_arg;
 	} argument;
 	char *result;
 	xdrproc_t _xdr_argument, _xdr_result;
@@ -44,14 +44,14 @@ dist_pipe_101(struct svc_req *rqstp, register SVCXPRT *transp)
 		return;
 
 	case pipe_put:
-		_xdr_argument = (xdrproc_t) xdr_message_v;
+		_xdr_argument = (xdrproc_t) xdr_msg;
 		_xdr_result = (xdrproc_t) xdr_int;
 		local = (char *(*)(char *, struct svc_req *)) _pipe_put_101;
 		break;
 
 	case pipe_get:
 		_xdr_argument = (xdrproc_t) xdr_void;
-		_xdr_result = (xdrproc_t) xdr_message_v;
+		_xdr_result = (xdrproc_t) xdr_msg;
 		local = (char *(*)(char *, struct svc_req *)) _pipe_get_101;
 		break;
 
@@ -80,15 +80,15 @@ main (int argc, char **argv)
 {
 	register SVCXPRT *transp;
 
-	pmap_unset (DIST_PIPE, alfa);
+	pmap_unset (DIST_PIPE, beta);
 
 	transp = svcudp_create(RPC_ANYSOCK);
 	if (transp == NULL) {
 		fprintf (stderr, "%s", "cannot create udp service.");
 		exit(1);
 	}
-	if (!svc_register(transp, DIST_PIPE, alfa, dist_pipe_101, IPPROTO_UDP)) {
-		fprintf (stderr, "%s", "unable to register (DIST_PIPE, alfa, udp).");
+	if (!svc_register(transp, DIST_PIPE, beta, dist_pipe_101, IPPROTO_UDP)) {
+		fprintf (stderr, "%s", "unable to register (DIST_PIPE, beta, udp).");
 		exit(1);
 	}
 
@@ -97,8 +97,8 @@ main (int argc, char **argv)
 		fprintf (stderr, "%s", "cannot create tcp service.");
 		exit(1);
 	}
-	if (!svc_register(transp, DIST_PIPE, alfa, dist_pipe_101, IPPROTO_TCP)) {
-		fprintf (stderr, "%s", "unable to register (DIST_PIPE, alfa, tcp).");
+	if (!svc_register(transp, DIST_PIPE, beta, dist_pipe_101, IPPROTO_TCP)) {
+		fprintf (stderr, "%s", "unable to register (DIST_PIPE, beta, tcp).");
 		exit(1);
 	}
 

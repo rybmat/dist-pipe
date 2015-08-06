@@ -6,11 +6,33 @@
 #include "dist_pipe.h"
 
 bool_t
-xdr_message_v (XDR *xdrs, message_v *objp)
+xdr_STATUS (XDR *xdrs, STATUS *objp)
+{
+	register int32_t *buf;
+
+	 if (!xdr_enum (xdrs, (enum_t *) objp))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
+xdr_payload (XDR *xdrs, payload *objp)
 {
 	register int32_t *buf;
 
 	 if (!xdr_string (xdrs, objp, ~0))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
+xdr_msg (XDR *xdrs, msg *objp)
+{
+	register int32_t *buf;
+
+	 if (!xdr_int (xdrs, &objp->status))
+		 return FALSE;
+	 if (!xdr_payload (xdrs, &objp->data))
 		 return FALSE;
 	return TRUE;
 }
