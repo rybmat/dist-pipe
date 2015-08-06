@@ -33,21 +33,22 @@ dist_pipe_101(char *host)
 	result_1 = pipe_put_101(pipe_put_101_arg1, clnt);
 	printf("%d\n", *result_1);
 
-	result_1 = pipe_put_101(pipe_put_101_arg1, clnt);
-	printf("%d\n", *result_1);
+	pipe_put_101_arg1.status = END;
 
 	result_1 = pipe_put_101(pipe_put_101_arg1, clnt);
 	printf("%d\n", *result_1);
 
-	result_2 = pipe_get_101(clnt);
-	printf("%s\n", result_2->data);
+	result_1 = pipe_put_101(pipe_put_101_arg1, clnt);
+	printf("%d\n", *result_1);
 
 	result_2 = pipe_get_101(clnt);
-	printf("%s\n", result_2->data);
+	printf("%d %s\n",result_2->status, result_2->data);
 	result_2 = pipe_get_101(clnt);
-	printf("%s\n", result_2->data);
+	printf("%d %s\n",result_2->status, result_2->data);
 	result_2 = pipe_get_101(clnt);
-	printf("%s\n", result_2->data);
+	printf("%d %s\n",result_2->status, result_2->data);
+	result_2 = pipe_get_101(clnt);
+	printf("%d %s\n",result_2->status, result_2->data);
 #ifndef	DEBUG
 	clnt_destroy (clnt);
 #endif	 /* DEBUG */

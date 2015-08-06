@@ -12,11 +12,15 @@ static char* buffer[buffer_size] = {NULL};
 int read_pos = 0;
 int write_pos = 0;
 
+int end = 0;
+
 int *
 pipe_put_101_svc(msg arg1,  struct svc_req *rqstp)
 {
 	static int  result;
 	if (buffer[write_pos] == NULL) {
+		end = (arg1.status == END) ? 1 : 0;
+
 		int data_len = strlen(arg1.data);
 
 		buffer[write_pos] = malloc(data_len * sizeof(char) + 1);
@@ -40,7 +44,7 @@ pipe_get_101_svc(struct svc_req *rqstp)
 	
 	if (buffer[read_pos] == NULL) {
 		result.data = "";
-		result.status = EMPTY;
+		result.status = end ? END : EMPTY;
 	} else {
 		result.data = buffer[read_pos];
 		result.status = OK;
