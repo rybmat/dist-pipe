@@ -23,16 +23,39 @@ dist_pipe_101(char *host)
 	}
 #endif	/* DEBUG */
 
+	// result_1 = pipe_put_101(pipe_put_101_arg1, clnt);
+	// if (result_1 == (int *) NULL) {
+	// 	clnt_perror (clnt, "call failed");
+	// }
+	// result_2 = pipe_get_101(clnt);
+	// if (result_2 == (message_v *) NULL) {
+	// 	clnt_perror (clnt, "call failed");
+	// } else {
+	// 	printf("%s\n", *result_2);
+	// }
+
 	result_1 = pipe_put_101(pipe_put_101_arg1, clnt);
-	if (result_1 == (int *) NULL) {
-		clnt_perror (clnt, "call failed");
-	}
+	printf("%d\n", *result_1);
+
+	result_1 = pipe_put_101(pipe_put_101_arg1, clnt);
+	printf("%d\n", *result_1);
+
+	result_1 = pipe_put_101(pipe_put_101_arg1, clnt);
+	printf("%d\n", *result_1);
+
+	result_1 = pipe_put_101(pipe_put_101_arg1, clnt);
+	printf("%d\n", *result_1);
+
 	result_2 = pipe_get_101(clnt);
-	if (result_2 == (message_v *) NULL) {
-		clnt_perror (clnt, "call failed");
-	} else {
-		printf("%s\n", *result_2);
-	}
+	printf("%s\n", *result_2);
+
+	result_2 = pipe_get_101(clnt);
+	printf("%s\n", *result_2);
+	result_2 = pipe_get_101(clnt);
+	printf("%s\n", *result_2);
+	result_2 = pipe_get_101(clnt);
+	printf("%s\n", *result_2);
+
 #ifndef	DEBUG
 	clnt_destroy (clnt);
 #endif	 /* DEBUG */

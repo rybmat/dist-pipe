@@ -5,7 +5,7 @@
  */
 
 #include "dist_pipe.h"
-#define buffer_size 10
+#define buffer_size 3
 
 static char* buffer[buffer_size] = {NULL};
 
@@ -37,7 +37,7 @@ pipe_get_101_svc(struct svc_req *rqstp)
 	static message_v  result;
 	
 	if (buffer[read_pos] == NULL) {
-		result = NULL;
+		result = "\0";
 	} else {
 		result = buffer[read_pos];
 		buffer[read_pos] = NULL;
