@@ -6,65 +6,82 @@
 
 #include "dist_pipe.h"
 
-
-void
-dist_pipe_101(char *host)
-{
-	CLIENT *clnt;
-	int  *result_1;
-	msg pipe_put_101_arg1;
-	msg  *result_2;
-
-	pipe_put_101_arg1.data = "sfdjklf";
-	pipe_put_101_arg1.status = OK;
-
-
-#ifndef	DEBUG
-	clnt = clnt_create (host, DIST_PIPE, beta, "udp");
+CLIENT* get_clnt(char* host) {
+	CLIENT *clnt = clnt_create (host, DIST_PIPE, beta, "udp");
 	if (clnt == NULL) {
 		clnt_pcreateerror (host);
 		exit (1);
 	}
-#endif	/* DEBUG */
+	return clnt;
+}
 
-	result_1 = pipe_put_101(pipe_put_101_arg1, clnt);
-	printf("%d\n", *result_1);
+int put(char* host, char* payload, int close) {
+	CLIENT *clnt = get_clnt(host);
+	msg message;
 
-	result_1 = pipe_put_101(pipe_put_101_arg1, clnt);
-	printf("%d\n", *result_1);
+	message.data = payload;
+	message.status = close ? END : OK;
 
-	pipe_put_101_arg1.status = END;
-
-	result_1 = pipe_put_101(pipe_put_101_arg1, clnt);
-	printf("%d\n", *result_1);
-
-	result_1 = pipe_put_101(pipe_put_101_arg1, clnt);
-	printf("%d\n", *result_1);
-
-	result_2 = pipe_get_101(clnt);
-	printf("%d %s\n",result_2->status, result_2->data);
-	result_2 = pipe_get_101(clnt);
-	printf("%d %s\n",result_2->status, result_2->data);
-	result_2 = pipe_get_101(clnt);
-	printf("%d %s\n",result_2->status, result_2->data);
-	result_2 = pipe_get_101(clnt);
-	printf("%d %s\n",result_2->status, result_2->data);
-#ifndef	DEBUG
+	int  *result = pipe_put_101(message, clnt);
 	clnt_destroy (clnt);
-#endif	 /* DEBUG */
+	
+	return *result;
+}
+
+msg* get(char* host) {
+	CLIENT *clnt = get_clnt(host);
+	msg *result = pipe_get_101(clnt);
+	
+	clnt_destroy (clnt);
+	return result;
 }
 
 
-int
-main (int argc, char *argv[])
-{
-	char *host;
 
-	if (argc < 2) {
-		printf ("usage: %s server_host\n", argv[0]);
-		exit (1);
+int main (int argc, char *argv[]) {
+// USAGE: ./dist_pipe_client put <message> <close(true/false)>
+//		  ./dist_pipe_client get
+
+	char *host = "localhost";
+
+	if (strcmp(argv[1], "get") == 0) {
+		msg* m = get(host);
+		switch(m->status) {
+			case OK: {
+				printf("got message: %s\n", m->data);
+				break;
+			}
+			case EMPTY: {
+				printf("pipe is empty\n");
+				break;
+			}
+			case END: {
+				printf("pipe is closed\n");
+				break;
+			}
+		}
+	} else if (strcmp(argv[1], "put") == 0) {
+		int result;
+		if (strcmp(argv[3], "true") == 0)
+			result = put(host, argv[2], 1);
+		else
+			result = put(host, argv[2], 0);
+
+		switch(result) {
+			case OK: {
+				printf("message sent\n");
+				break;
+			}
+			case FULL: {
+				printf("pipe is full\n");
+				break;
+			}
+			case FINISHING: {
+				printf("pipe is closed already\n");
+			}
+		}
 	}
-	host = argv[1];
-	dist_pipe_101 (host);
+	
+
 exit (0);
 }
